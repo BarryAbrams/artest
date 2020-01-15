@@ -7,7 +7,8 @@
   <link rel="stylesheet" type="text/css" href="index.css">
 
   <!-- We've included a slightly modified version of A-Frame, which fixes some polish concerns -->
-  <script src="//cdn.8thwall.com/web/aframe/8frame-0.8.2.min.js"></script>
+  <!-- <script src="//cdn.8thwall.com/web/aframe/8frame-0.8.2.min.js"></script> -->
+  <script src="https://aframe.io/releases/1.0.2/aframe.min.js"></script>
 
   <!-- XR Extras - provides utilities like load screen, almost there, and error handling.
          See github.com/8thwall/web/xrextras -->
@@ -77,25 +78,23 @@
       xrextras-almost-there
       xrextras-loading
       xrextras-runtime-error
-
+      debug
 >
 
   <a-assets>
-    <a-asset-item id="unicornModel" src="unicorn.glb"></a-asset-item>
+    <a-asset-item id="unicornModel" src="scaled-scene.gltf" ></a-asset-item>
   </a-assets>
 
   <a-camera position="0 4 10"> </a-camera>
 
-  <a-light type="ambient" intensity=".5"></a-light>
+  <!-- <a-light type="ambient" intensity=".5"></a-light> -->
 
   <a-entity image-target>
     <a-entity scale=".06 .06 .06">
-      <!-- <a-box scale=".7 1.05 .01" position="0 0 0" color="#000000"></a-box> -->
       <a-box scale="12.5 .5 .5" position="0 9 -.125" color="#222222"></a-box>
       <a-box scale=".5 18.5 .5" position="-6 0 -.125" color="#222222"></a-box>
       <a-box scale=".5 18.5 .5" position="6 0 -.125" color="#222222"></a-box>
       <a-box scale="12.5 .5 .5" position="0 -9 -.125" color="#222222"></a-box>
-      <!-- <a-box scale=".75 1.10 .01" position="0 0 0" color="#2d2920"></a-box> -->
 
       <a-entity id="hider-walls">
         <a-box scale="12 100 1" position="0 59 0" color="#990000" hider-material></a-box>
@@ -104,29 +103,13 @@
         <a-box scale="12 100 1" position="0 -59 0" color="#33ff00" hider-material></a-box>
       </a-entity>
 
-      <a-entity id="portal-contents">
-        <a-entity
-          scale="0.3 0.3 0.3"
-          position="0 -9 -3"
-          gltf-model="#unicornModel"></a-entity>
+      <a-entity id="portal-contents"  scale="41 41 41" position="0 9 0">
+        <a-entity position="0 0 0" gltf-model="#unicornModel"></a-entity>
         <a-sky color="#6EBAA7"></a-sky>
-        <!-- <a-box
-          scale="200 1 100"
-          position="0 -0.5 -49.5"
-          color="blue"></a-box> -->
-          <a-plane position="0 10 -9" rotation="0 0 0" width="120" height="36" color="#111111"></a-plane>
-          <a-plane position="0 -9 -9" rotation="-90 0 0" width="120" height="18" color="#ffffff"></a-plane>
       </a-entity>
 
-      <!-- <a-entity id="portal-world">
-        <a-box
-          scale="200 1 100"
-          position="0 -0.5 49.5"
-          color="blue"></a-box>
-      </a-entity> -->
 
 
-      <a-light type="directional" intensity="1" target="#frame" position="15 15 25"> </a-light>
     </a-entity>
   </a-entity>
 
