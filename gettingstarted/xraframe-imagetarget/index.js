@@ -31,3 +31,11 @@ AFRAME.registerComponent('targetname', {
     })
   }
 })
+
+
+AFRAME.registerComponent('hider-material', {
+  init: function() {
+    const mesh = this.el.getObject3D('mesh')
+    mesh.material.colorWrite = false
+  },
+})

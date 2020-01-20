@@ -7,8 +7,7 @@
   <link rel="stylesheet" type="text/css" href="index.css">
 
   <!-- We've included a slightly modified version of A-Frame, which fixes some polish concerns -->
-  <!-- <script src="//cdn.8thwall.com/web/aframe/8frame-0.8.2.min.js"></script> -->
-  <script src="https://aframe.io/releases/1.0.2/aframe.min.js"></script>
+  <script src="//cdn.8thwall.com/web/aframe/8frame-1.0.3.min.js"></script>
 
   <!-- XR Extras - provides utilities like load screen, almost there, and error handling.
          See github.com/8thwall/web/xrextras -->
@@ -21,99 +20,49 @@
   <!-- client code -->
   <script src="index.js"></script>
 
-  <script>
-    // This component gives the invisible hider walls the property they need
-    AFRAME.registerComponent('hider-material', {
-      init: function() {
-        const mesh = this.el.getObject3D('mesh')
-        mesh.material.colorWrite = false
-      },
-    })
-
-    // This component hides and shows certain elements as the camera moves
-    AFRAME.registerComponent('portal', {
-      schema: {
-        width: {default: 4},
-        height: {default: 6},
-        depth: {default: 1},
-      },
-      init: function(){
-        this.camera = document.getElementById('camera')
-        this.contents = document.getElementById('portal-contents')
-        this.walls = document.getElementById('hider-walls')
-        this.portalWall = document.getElementById('portal-wall')
-        this.portalWorld = document.getElementById('portal-world')
-        this.isInPortalSpace = false
-        this.wasOutside = true
-      },
-      tick: function() {
-        const position = this.camera.object3D.position
-
-        const isOutside = position.z  > this.data.depth / 2
-        const withinPortalBounds =
-          position.y < this.data.height && Math.abs(position.x) < this.data.width / 2
-
-        if (this.wasOutside != isOutside && withinPortalBounds) {
-          this.isInPortalSpace = !isOutside
-        }
-
-        this.contents.object3D.visible = this.isInPortalSpace || isOutside
-        this.walls.object3D.visible = !this.isInPortalSpace && isOutside
-        this.portalWall.object3D.visible = this.isInPortalSpace && !isOutside
-        this.portalWorld.object3D.visible = this.isInPortalSpace
-
-        this.wasOutside = isOutside
-      }
-    })
-
-  </script>
 
   <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 </head>
 
 <body>
+  <!-- If your app only interacts with image targets and not the world, disabling world tracking can
+       improve speed. -->
   <a-scene
-      antialias="true"
-      xrweb="disableWorldTracking: true"      
-      xrextras-almost-there
-      xrextras-loading
-      xrextras-runtime-error
-      debug
->
+    antialias="true"
+    xrweb="disableWorldTracking: true"
+    xrextras-almost-there
+    xrextras-loading
+    xrextras-runtime-error
+    renderer="antialias: true; physicallyCorrectLights: true;"
+    shadow="type:pcfsoft"
+    >
 
-  <a-assets>
-    <a-asset-item id="unicornModel" src="scaled-scene.gltf" ></a-asset-item>
-  </a-assets>
+    <a-assets>
+      <a-asset-item id="frame-glb" src="scaled-scene.gltf"></a-asset-item>
+    </a-assets>
 
-  <a-camera position="0 4 10"> </a-camera>
+    <a-camera position="0 4 10"> </a-camera>
 
-  <!-- <a-light type="ambient" intensity=".5"></a-light> -->
+    <a-light type="ambient" intensity="1.3"></a-light>
 
-  <a-entity image-target>
-    <a-entity scale=".06 .06 .06">
-      <a-box scale="12.5 .5 .5" position="0 9 -.125" color="#222222"></a-box>
-      <a-box scale=".5 18.5 .5" position="-6 0 -.125" color="#222222"></a-box>
-      <a-box scale=".5 18.5 .5" position="6 0 -.125" color="#222222"></a-box>
-      <a-box scale="12.5 .5 .5" position="0 -9 -.125" color="#222222"></a-box>
+    <a-entity image-target>
 
-      <a-entity id="hider-walls">
-        <a-box scale="12 100 1" position="0 59 0" color="#990000" hider-material></a-box>
-        <a-box scale="94 100 1" position="-53 0 0" color="#009900" hider-material></a-box>
-        <a-box scale="94 100 1" position="53 0 0" color="#000099" hider-material></a-box>
-        <a-box scale="12 100 1" position="0 -59 0" color="#33ff00" hider-material></a-box>
+      <a-entity scale=".04 .04 .04">
+
+        <a-entity id="lights" position="0 -9 0" >
+          <a-entity light="type: point; intensity: 30; color: white " position="-0 101 20" shadow="cast:true; receive: true;"></a-entity> 
+        </a-entity>
+        <a-plane position="0 0 0" width="24" height="18" src="image.png" ></a-plane>
+
+        <a-entity id="portal-contents"  scale="41 41 41" position="0 -9 0">
+          <a-entity position="0 0 0" gltf-model="#frame-glb" animation-mixer shadow="receive: true; cast:true"></a-entity>
       </a-entity>
 
-      <a-entity id="portal-contents"  scale="41 41 41" position="0 9 0">
-        <a-entity position="0 0 0" gltf-model="#unicornModel"></a-entity>
-        <a-sky color="#6EBAA7"></a-sky>
-      </a-entity>
-
-
-
+      <!-- Add extra lighting to highlight the 3d geometry of the image frame. -->
+      <a-light type="directional" intensity="1" target="#frame" position="1.5 0.6 2.5"> </a-light>
     </a-entity>
-  </a-entity>
 
-</a-scene>
+  </a-scene>
 </body>
 
 </html>
